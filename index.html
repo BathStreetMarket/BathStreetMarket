@@ -67,6 +67,11 @@
   .item{background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:10px;
     box-shadow:0 2px 8px rgba(80,40,10,.07);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
   .item b{font-weight:600;font-size:15px}
+  .item>div{flex:1;min-width:0}
+  .thumb{flex:0 0 72px!important;width:72px;height:72px;border-radius:12px;object-fit:cover;cursor:zoom-in;background:var(--line);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+  #lb{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:18px}
+  #lb.on{display:flex}
+  #lb img{max-width:100%;max-height:85vh;border-radius:14px}
   .item p{font-size:12.5px;color:var(--muted);margin-top:2px}
   .price{flex:0 0 auto;background:var(--red);color:#fff;font-weight:600;font-size:14px;padding:5px 12px;border-radius:999px}
   .tag{display:inline-block;font-size:10px;font-weight:600;background:#fde7b0;color:#7a5200;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
@@ -113,13 +118,20 @@
   <a href="https://www.google.com/maps/dir//500+Bath+St,+Bristol,+PA+19007" style="color:#fff">Get Directions</a><br>Prices subject to change.
 </footer>
 
+<div id="lb"><img alt=""></div>
+
 <script src="menu.js"></script>
 <script>
+  const lb=document.getElementById('lb');
+  document.addEventListener('click',e=>{
+    if(e.target.classList.contains('thumb')){lb.querySelector('img').src=e.target.src;lb.classList.add('on')}
+    else if(lb.contains(e.target))lb.classList.remove('on');
+  });
   setTimeout(()=>document.getElementById('splash').classList.add('hide'),2800);
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const blockHtml=b=>{
     if(b.type==='items') return (b.title?`<h3>${esc(b.title)}</h3>`:'')+(b.items||[]).map(i=>
-      `<div class="item"><div><b>${esc(i.name)}${i.tag?`<span class="tag">${esc(i.tag)}</span>`:''}</b>${i.desc?`<p>${esc(i.desc)}</p>`:''}</div><span class="price">${esc(i.price)}</span></div>`).join('');
+      `<div class="item">${i.img?`<img class="thumb" src="${esc(i.img)}" alt="${esc(i.name)}" loading="lazy" onerror="this.remove()">`:''}<div><b>${esc(i.name)}${i.tag?`<span class="tag">${esc(i.tag)}</span>`:''}</b>${i.desc?`<p>${esc(i.desc)}</p>`:''}</div><span class="price">${esc(i.price)}</span></div>`).join('');
     const head=b.title?`<h4>${esc(b.title)}</h4>`:'';
     if(b.type==='rows') return `<div class="box">${head}${(b.rows||[]).map(r=>`<div class="row"><span>${esc(r.label)}</span><span>${esc(r.price)}</span></div>`).join('')}</div>`;
     if(b.type==='chips') return `<div class="box">${head}<div class="chips">${(b.chips||[]).map(c=>`<span>${esc(c)}</span>`).join('')}</div></div>`;

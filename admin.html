@@ -41,6 +41,9 @@
   .itemedit{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:8px}
   .itemedit .grid{margin-bottom:6px}
   .add{margin-top:8px}
+  .imgrow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+  .imgrow img,.imgrow .ph{width:56px;height:56px;border-radius:10px;object-fit:cover;background:var(--line);flex:0 0 56px;font-size:10px;color:var(--muted);display:flex;align-items:center;justify-content:center;text-align:center}
+  .imgrow input[type=file]{font-size:12px;padding:6px}
   .foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;z-index:10}
   #toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;max-width:90%;text-align:center;z-index:20}
   #toast.show{opacity:1}
@@ -131,7 +134,9 @@
       body=inp('Sub-heading (optional, e.g. On Hoagie Roll)',p+'.title',b.title)+b.items.map((it,ii)=>{
         const ip=`${p}.items.${ii}`;
         return `<div class="itemedit"><div class="grid">${inp('Name',ip+'.name',it.name)}${inp('Price',ip+'.price',it.price)}</div>
-          <div class="grid">${inp('Description / toppings',ip+'.desc',it.desc)}${inp('Tag (e.g. Chef\'s Special)',ip+'.tag',it.tag)}</div>${tools(ip)}</div>`;
+          <div class="grid">${inp('Description / toppings',ip+'.desc',it.desc)}${inp('Tag (e.g. Chef\'s Special)',ip+'.tag',it.tag)}</div>
+          <div class="imgrow">${it.img?`<img src="${esc(it.img)}" alt="">`:'<div class="ph">No image</div>'}
+            <input type="file" accept="image/*" data-img="${ip}">${it.img?`<button class="mini danger" data-a="rmimg" data-p="${ip}">Remove</button>`:''}</div>${tools(ip)}</div>`;
       }).join('')+`<button class="mini add" data-a="additem" data-p="${p}">+ Add item</button>`;
     }else if(b.type==='rows'){
       body=inp('Title',p+'.title',b.title)+b.rows.map((r,ri)=>{
@@ -157,10 +162,11 @@
   $('editor').addEventListener('click',e=>{
     const b=e.target.closest('button[data-a]');if(!b)return;
     const {a,p,t}=b.dataset;
-    if(a==='additem') get(p).items.push({name:'',desc:'',price:'',tag:''});
+    if(a==='additem') get(p).items.push({name:'',desc:'',price:'',tag:'',img:''});
+    else if(a==='rmimg') get(p).img='';
     else if(a==='addrow') get(p).rows.push({label:'',price:''});
     else if(a==='addblk'){
-      const nb={items:{type:'items',title:'',items:[{name:'',desc:'',price:'',tag:''}]},rows:{type:'rows',title:'',rows:[{label:'',price:''}]},chips:{type:'chips',title:'',chips:[]},text:{type:'text',title:'',text:''}}[t];
+      const nb={items:{type:'items',title:'',items:[{name:'',desc:'',price:'',tag:'',img:''}]},rows:{type:'rows',title:'',rows:[{label:'',price:''}]},chips:{type:'chips',title:'',chips:[]},text:{type:'text',title:'',text:''}}[t];
       get(p).blocks.push(nb);
     }else{
       const {arr,i}=parent(p);
@@ -168,6 +174,17 @@
       else if(a==='del'&&confirm('Delete this?'))arr.splice(i,1);else if(a==='del')return;
     }
     save();render();
+  });
+  const resize=file=>new Promise((res,rej)=>{
+    const im=new Image(),u=URL.createObjectURL(file);
+    im.onload=()=>{const k=Math.min(1,700/Math.max(im.width,im.height)),c=document.createElement('canvas');
+      c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',0.8))};
+    im.onerror=()=>rej(new Error('Could not read image'));im.src=u;
+  });
+  $('editor').addEventListener('change',async e=>{
+    const p=e.target.dataset.img,f=e.target.files&&e.target.files[0];if(!p||!f)return;
+    try{get(p).img=await resize(f);save();render()}catch(err){toast(err.message)}
   });
   $('addSec').onclick=()=>{menu.sections.push({id:'',tab:'New',title:'New category',badge:'',note:'',blocks:[]});save();render();scrollTo({top:document.body.scrollHeight,behavior:'smooth'})};
   $('reset').onclick=()=>{if(confirm('Discard unpublished changes and reload the live menu?')){localStorage.removeItem(DRAFT);menu=clone(window.MENU);render();toast('Changes discarded')}};
@@ -192,6 +209,16 @@
     const H={Authorization:'Bearer '+token,Accept:'application/vnd.github+json'};
     toast('Publishing...');
     try{
+      const base=`https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/`;
+      let n=0;
+      for(const s of menu.sections)for(const b of s.blocks)if(b.type==='items')for(const it of b.items){
+        if(!(it.img||'').startsWith('data:'))continue;
+        const path=`images/${slug(it.name)}-${Date.now().toString(36)}${n++}.jpg`;
+        const r=await fetch(base+path,{method:'PUT',headers:H,body:JSON.stringify({message:'Add image '+path,content:it.img.split(',')[1],branch:REPO.branch})});
+        if(r.status===401||r.status===403||r.status===404){localStorage.removeItem(TOKEN);throw new Error('Token rejected or no access to the repo.')}
+        if(!r.ok)throw new Error('Image upload failed ('+r.status+')');
+        it.img=path;save();
+      }
       const cur=await fetch(`${url}?ref=${REPO.branch}`,{headers:H});
       if(cur.status===401||cur.status===403||cur.status===404){localStorage.removeItem(TOKEN);throw new Error('Token rejected or no access to the repo.')}
       const sha=cur.ok?(await cur.json()).sha:undefined;
