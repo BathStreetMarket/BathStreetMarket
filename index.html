@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#b3261e">
+<title>Bath Street Market | Menu</title>
+<meta name="description" content="Bath Street Market - Your friendly neighbourhood shop store. Breakfast sandwiches, chicken, cold cuts and hot sandwiches.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#b3261e; --red-dark:#8c1c16; --cream:#fff8ec; --card:#ffffff;
+    --ink:#2b1d16; --muted:#7a6a60; --gold:#f2a900; --line:#f0e3cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth;scroll-padding-top:64px}
+  body{font-family:'Poppins',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.45;padding-bottom:env(safe-area-inset-bottom)}
+
+  header{
+    background:linear-gradient(180deg,rgba(140,28,22,.55) 0%,rgba(140,28,22,.92) 100%),url('logo.png') center/cover no-repeat;
+    color:#fff;text-align:center;padding:90px 20px 56px;position:relative;overflow:hidden;
+  }
+  header h1,header .tagline{text-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;transition:.2s}
+  .btn.primary{background:#fff;color:var(--red)}
+  .btn.ghost{border:2px solid #fff;color:#fff}
+  .btn:active{transform:scale(.96)}
+  .info{max-width:640px;margin:-8px auto 0;padding:0 16px;position:relative;z-index:2}
+  .info div{background:#fff;border-radius:18px;padding:14px 18px;box-shadow:0 6px 18px rgba(140,28,22,.15);border-left:6px solid var(--red);font-size:14px}
+  .info b{color:var(--red)}
+  header::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:22px;
+    background:var(--cream);border-radius:22px 22px 0 0;
+  }
+  .emoji-row{font-size:26px;letter-spacing:8px;margin-bottom:10px}
+  h1{font-family:'Playfair Display',serif;font-size:34px;line-height:1.1}
+  .tagline{margin-top:8px;font-size:14px;opacity:.92}
+  .badge{display:inline-block;margin-top:14px;background:var(--gold);color:#3b2600;font-weight:600;font-size:12px;padding:5px 14px;border-radius:999px}
+
+  nav{position:sticky;top:0;z-index:10;background:var(--cream);border-bottom:1px solid var(--line);
+    display:flex;gap:8px;overflow-x:auto;padding:10px 14px;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:0 0 auto;text-decoration:none;color:var(--red);font-weight:600;font-size:13px;
+    padding:8px 14px;border-radius:999px;border:1.5px solid var(--red);background:#fff;transition:.2s}
+  nav a.active{background:var(--red);color:#fff}
+
+  main{max-width:640px;margin:0 auto;padding:6px 16px 40px}
+  section{margin-top:26px}
+  h2{font-family:'Playfair Display',serif;font-size:26px;color:var(--red);display:flex;align-items:center;gap:8px}
+  h2 small{font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;background:var(--gold);color:#3b2600;padding:3px 10px;border-radius:999px}
+  .note{font-size:12.5px;color:var(--muted);margin:4px 0 12px}
+  h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:18px 0 8px}
+
+  .item{background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:10px;
+    box-shadow:0 2px 8px rgba(80,40,10,.07);display:flex;gap:12px;justify-content:space-between;align-items:flex-start}
+  .item b{font-weight:600;font-size:15px}
+  .item p{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .price{flex:0 0 auto;background:var(--red);color:#fff;font-weight:600;font-size:14px;padding:5px 12px;border-radius:999px}
+  .tag{display:inline-block;font-size:10px;font-weight:600;background:#fde7b0;color:#7a5200;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+
+  .box{background:#fff;border:1.5px dashed #e0c79a;border-radius:16px;padding:12px 16px;margin-top:10px}
+  .box h4{font-size:13px;color:var(--red);margin-bottom:6px}
+  .row{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  .row span:last-child{font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+  .chips span{font-size:12px;background:var(--cream);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
+
+  footer{background:var(--ink);color:#f5e9d6;text-align:center;padding:26px 20px 34px;font-size:13px}
+  footer b{font-family:'Playfair Display',serif;font-size:20px;display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="emoji-row">🥪 🍳 🍗</div>
+  <h1>Bath Street Market</h1>
+  <p class="tagline">Your friendly neighbourhood shop store</p>
+  <span class="badge">Fresh Menu</span>
+  <div class="actions">
+    <a class="btn primary" href="https://www.google.com/maps/dir//500+Bath+St,+Bristol,+PA+19007" target="_blank" rel="noopener">📍 Get Directions</a>
+    <a class="btn ghost" href="#breakfast">View Menu</a>
+  </div>
+</header>
+
+<div class="info"><div><b>📍 Find us:</b> 500 Bath St, Bristol, PA 19007</div></div>
+
+<nav id="tabs">
+  <a href="#breakfast" class="active">Breakfast</a>
+  <a href="#chicken">Chicken</a>
+  <a href="#cold">Cold Cuts</a>
+  <a href="#hot">Hot Sandwiches</a>
+  <a href="#sides">Sides</a>
+</nav>
+
+<main>
+  <!-- Edit prices/items below. -->
+  <section id="breakfast">
+    <h2>Breakfast Sandwiches</h2>
+    <p class="note">All breakfast sandwiches are $4.00 each.</p>
+    <div class="item"><div><b>Bacon, Egg &amp; Cheese</b></div><span class="price">$4.00</span></div>
+    <div class="item"><div><b>Sausage, Egg &amp; Cheese</b></div><span class="price">$4.00</span></div>
+    <div class="item"><div><b>Pork Roll, Egg &amp; Cheese</b></div><span class="price">$4.00</span></div>
+    <div class="item"><div><b>Turkey Bacon, Egg &amp; Cheese</b></div><span class="price">$4.00</span></div>
+    <div class="box"><h4>Add-ons</h4>
+      <div class="row"><span>Mayo</span><span>$0.50</span></div>
+      <div class="row"><span>Extra cheese</span><span>$0.50</span></div>
+      <div class="row"><span>Extra egg</span><span>$1.00</span></div>
+      <div class="row"><span>Extra meat</span><span>$2.00</span></div>
+    </div>
+  </section>
+
+  <section id="chicken">
+    <h2>Chicken <small>Weekdays only</small></h2>
+    <div class="item"><div><b>Chicken Wings</b><p>2 pieces</p></div><span class="price">$2.40</span></div>
+    <div class="item"><div><b>Chicken Tenders</b><p>2 pieces</p></div><span class="price">$2.40</span></div>
+    <div class="item"><div><b>Chicken Legs</b><p>2 pieces</p></div><span class="price">$3.00</span></div>
+    <div class="box"><h4>Chips and / or French Fries</h4>
+      <div class="row"><span>Small</span><span>$2.00</span></div>
+      <div class="row"><span>Medium</span><span>$3.00</span></div>
+      <div class="row"><span>Large</span><span>$5.00</span></div>
+    </div>
+    <div class="box"><h4>Choice of sauce</h4>
+      <div class="chips"><span>Hot sauce</span><span>Honey mustard</span><span>Honey BBQ</span><span>Blue cheese</span><span>Ranch</span></div>
+    </div>
+  </section>
+
+  <section id="cold">
+    <h2>Cold Cut Sandwiches</h2>
+    <p class="note">Regular toppings: mayo, lettuce, tomatoes, onions, salt, pepper &amp; oregano, oil and vinegar.</p>
+    <h3>On Hoagie Roll</h3>
+    <div class="item"><div><b>Turkey &amp; Cheese</b><p>American cheese, regular toppings</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>Ham &amp; Cheese</b><p>American cheese, regular toppings</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>Italian</b><p>Provolone cheese, regular toppings</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>Veggie Sandwich</b><p>Regular toppings</p></div><span class="price">$7.99</span></div>
+    <h3>On Kaiser Roll</h3>
+    <div class="item"><div><b>Turkey &amp; Cheese</b><p>American cheese</p></div><span class="price">$5.50</span></div>
+    <div class="box"><h4>Add-on toppings</h4>
+      <div class="row"><span>Hot peppers</span><span>$0.50</span></div>
+      <div class="row"><span>Sweet peppers</span><span>$0.50</span></div>
+      <div class="row"><span>Pickles</span><span>$0.50</span></div>
+      <div class="row"><span>Jalapeños</span><span>$0.50</span></div>
+      <div class="row"><span>Extra cheese or mayo</span><span>$0.50</span></div>
+      <div class="row"><span>Extra regular topping (each)</span><span>$0.50</span></div>
+    </div>
+  </section>
+
+  <section id="hot">
+    <h2>Hot Sandwiches</h2>
+    <p class="note">Burger toppings: mayo, ketchup, lettuce, fried or regular onions, tomatoes.<br>Other hot sandwiches: mayo, ketchup, fried onions.</p>
+    <div class="item"><div><b>Cheese Steak<span class="tag">Chef's Special</span></b><p>Regular toppings</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>Chicken Cheese Steak</b><p>Regular toppings</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>Buffalo Chicken Cheese Steak</b><p>Regular toppings</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>BLT Sandwich</b><p>Lettuce, tomatoes, mayo, egg</p></div><span class="price">$8.99</span></div>
+    <div class="item"><div><b>Cheeseburger<span class="tag">Chef's Special</span></b><p>Regular toppings</p></div><span class="price">$5.50</span></div>
+    <div class="item"><div><b>Chicken Sandwich</b></div><span class="price">$5.50</span></div>
+    <div class="box"><h4>Add-ons</h4>
+      <div class="row"><span>Bacon</span><span>$2.00</span></div>
+      <div class="row"><span>Mushroom</span><span>$1.00</span></div>
+      <div class="row"><span>Egg</span><span>$1.00</span></div>
+      <div class="row"><span>Jalapeños</span><span>$1.00</span></div>
+      <div class="row"><span>Pickles, hot peppers, sweet peppers</span><span>$1.00</span></div>
+      <div class="row"><span>Cheese or mayo</span><span>$0.50</span></div>
+      <div class="row"><span>Extra regular topping (each)</span><span>$0.50</span></div>
+    </div>
+  </section>
+
+  <section id="sides">
+    <h2>Sides &amp; Sauces</h2>
+    <p class="note">Optional with any item.</p>
+    <div class="box"><div class="chips">
+      <span>Ketchup</span><span>Hot sauce</span><span>Honey mustard</span><span>Blue cheese</span><span>Ranch</span><span>Yellow mustard</span><span>Spicy mustard</span>
+    </div></div>
+    <div class="box"><h4>Cheese</h4>
+      <p class="note" style="margin:0">American cheese on everything. Provolone on the Italian, unless you ask otherwise.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <b>Bath Street Market</b>
+  Your friendly neighbourhood shop store<br>500 Bath St, Bristol, PA 19007<br>
+  <a href="https://www.google.com/maps/dir//500+Bath+St,+Bristol,+PA+19007" style="color:#fff">Get Directions</a><br>Prices subject to change.
+</footer>
+
+<script>
+  const links=[...document.querySelectorAll('#tabs a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id));
+        links.find(l=>l.classList.contains('active')).scrollIntoView({inline:'center',block:'nearest'});
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
