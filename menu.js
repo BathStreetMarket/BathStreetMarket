@@ -15,7 +15,8 @@ window.MENU = {
               "name": "Bacon, Egg & Cheese",
               "desc": "",
               "price": "$4.00",
-              "tag": ""
+              "tag": "",
+              "img": "images/bacon-egg-cheese-muylqjfl0.jpg"
             },
             {
               "name": "Sausage, Egg & Cheese",
@@ -88,7 +89,7 @@ window.MENU = {
             {
               "name": "Chicken Tenders",
               "desc": "2 pieces",
-              "price": "$2.40",
+              "price": "$3.00",
               "tag": ""
             },
             {
