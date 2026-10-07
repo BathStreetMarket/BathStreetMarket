@@ -250,7 +250,7 @@ window.MENU = {
               "desc": "Mayo, ketchup, lettuce, fried or regular onions, tomatoes",
               "price": "$5.50",
               "tag": "Chef's Special",
-              "img": "images/cheeseburger-muyecnn00.jpg"
+              "img": ""
             },
             {
               "name": "Chicken Sandwich",
