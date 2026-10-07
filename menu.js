@@ -16,7 +16,7 @@ window.MENU = {
               "desc": "",
               "price": "$4.00",
               "tag": "",
-              "img": "images/bacon-egg-cheese-muylqjfl0.jpg"
+              "img": ""
             },
             {
               "name": "Sausage, Egg & Cheese",
