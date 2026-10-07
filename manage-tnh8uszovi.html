@@ -81,13 +81,13 @@
 <script>
   // Client-side gate only: it hides the editor, it is not real security. Publishing is protected by the GitHub token.
   const HASH='859b2dc4d7d3208067d1a2185db5457c2efb8a48e47886b0a78e17f45579032b';
-  const REPO={owner:'BathStreetMarkey',repo:'BathStreetMarket',path:'menu.js',branch:'main'};
+  const REPO={owner:'BathStreetMarket',repo:'BathStreetMarket',path:'menu.js',branch:'main'};
   const DRAFT='bsm_draft', TOKEN='bsm_gh_token', SESSION='bsm_admin';
 
   const $=id=>document.getElementById(id);
   const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
   const clone=o=>JSON.parse(JSON.stringify(o));
-  const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),3200)};
+  const toast=(m,ms=3200)=>{const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),ms)};
 
   let menu=JSON.parse(localStorage.getItem(DRAFT)||'null')||clone(window.MENU);
   const save=()=>localStorage.setItem(DRAFT,JSON.stringify(menu));
@@ -198,6 +198,7 @@
   $('download').onclick=()=>{
     const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([finalize()],{type:'text/javascript'}));a.download='menu.js';a.click();
   };
+  const why=async(r,step)=>{let m='';try{m=(await r.json()).message||''}catch(e){}return `${step} failed (${r.status}): ${m||'no details'}. Check the token has Contents read/write on BathStreetMarket.`};
   const b64=s=>{let r='';new TextEncoder().encode(s).forEach(b=>r+=String.fromCharCode(b));return btoa(r)};
   $('publish').onclick=async()=>{
     let token=localStorage.getItem(TOKEN);
@@ -215,18 +216,18 @@
         if(!(it.img||'').startsWith('data:'))continue;
         const path=`images/${slug(it.name)}-${Date.now().toString(36)}${n++}.jpg`;
         const r=await fetch(base+path,{method:'PUT',headers:H,body:JSON.stringify({message:'Add image '+path,content:it.img.split(',')[1],branch:REPO.branch})});
-        if(r.status===401||r.status===403||r.status===404){localStorage.removeItem(TOKEN);throw new Error('Token rejected or no access to the repo.')}
-        if(!r.ok)throw new Error('Image upload failed ('+r.status+')');
+        if(r.status===401||r.status===403||r.status===404){localStorage.removeItem(TOKEN);throw new Error(await why(r,'Image upload'))}
+        if(!r.ok)throw new Error(await why(r,'Image upload'));
         it.img=path;save();
       }
       const cur=await fetch(`${url}?ref=${REPO.branch}`,{headers:H});
-      if(cur.status===401||cur.status===403||cur.status===404){localStorage.removeItem(TOKEN);throw new Error('Token rejected or no access to the repo.')}
+      if(cur.status===401||cur.status===403||cur.status===404){localStorage.removeItem(TOKEN);throw new Error(await why(cur,'Menu check'))}
       const sha=cur.ok?(await cur.json()).sha:undefined;
       const res=await fetch(url,{method:'PUT',headers:H,body:JSON.stringify({message:'Update menu from admin page',content:b64(finalize()),branch:REPO.branch,sha})});
-      if(!res.ok)throw new Error('GitHub error '+res.status);
+      if(!res.ok)throw new Error(await why(res,'Publish'));
       localStorage.setItem(TOKEN,token);
-      toast('Published! The live site updates in about 1-2 minutes.');
-    }catch(err){toast(err.message)}
+      toast('Published! The live site updates in about 1-2 minutes.',8000);
+    }catch(err){toast(err.message,15000)}
   };
   if(sessionStorage.getItem(SESSION)==='1') show();
 </script>
