@@ -34,6 +34,13 @@ window.MENU = {
               "desc": "",
               "price": "$4.00",
               "tag": ""
+            },
+            {
+              "name": "Double Egg and Cheese",
+              "desc": "",
+              "price": "$4.00",
+              "tag": "",
+              "img": ""
             }
           ]
         },
@@ -54,7 +61,7 @@ window.MENU = {
               "price": "$1.00"
             },
             {
-              "label": "Extra meat",
+              "label": "Extra Meat (Bacon, Sausage, Pork Roll, Turkey Bacon)",
               "price": "$2.00"
             }
           ]
@@ -136,21 +143,21 @@ window.MENU = {
           "items": [
             {
               "name": "Turkey & Cheese",
-              "desc": "American cheese. Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
+              "desc": "American cheese, Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
               "price": "$8.99",
-              "tag": ""
+              "tag": "Chef's Special"
             },
             {
               "name": "Ham & Cheese",
-              "desc": "American cheese. Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
+              "desc": "American cheese, Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
               "price": "$8.99",
               "tag": ""
             },
             {
               "name": "Italian",
-              "desc": "Provolone cheese. Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
+              "desc": "Provolone cheese, Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
               "price": "$8.99",
-              "tag": ""
+              "tag": "Chef's Special"
             },
             {
               "name": "Veggie Sandwich",
