@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin | Bath Street Market</title>
+<style>
+  :root{--red:#b3261e;--red-dark:#8c1c16;--cream:#fff8ec;--ink:#2b1d16;--muted:#7a6a60;--gold:#f2a900;--line:#f0e3cf}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,'Segoe UI',sans-serif;background:var(--cream);color:var(--ink);padding-bottom:90px}
+  .hidden{display:none!important}
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,var(--red),var(--red-dark))}
+  .card{background:#fff;border-radius:18px;padding:26px 22px;width:100%;max-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .card h1{color:var(--red);font-size:22px;margin-bottom:4px}
+  .card p{color:var(--muted);font-size:13px;margin-bottom:16px}
+  label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1.5px solid #e4d3b6;border-radius:10px;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px}
+  .primary{background:var(--red);color:#fff}
+  .gold{background:var(--gold);color:#3b2600}
+  .ghost{background:#fff;color:var(--red);border:1.5px solid var(--red)}
+  .danger{background:#fde4e2;color:var(--red)}
+  .mini{padding:5px 9px;font-size:13px;background:#f3e8d4;color:var(--ink)}
+  #err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px}
+  .full{width:100%;margin-top:16px}
+
+  header.bar{position:sticky;top:0;z-index:10;background:var(--red);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  header.bar h1{font-size:17px}
+  header.bar a,header.bar button{font-size:13px;color:#fff;background:rgba(255,255,255,.18);border-radius:8px;padding:6px 10px;text-decoration:none}
+  main{max-width:760px;margin:0 auto;padding:14px}
+  .sec{background:#fff;border-radius:16px;padding:14px;margin-bottom:16px;box-shadow:0 2px 8px rgba(80,40,10,.08);border-top:5px solid var(--red)}
+  .sec>.top,.blk>.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+  .sec>.top b{color:var(--red);font-size:16px}
+  .tools{display:flex;gap:5px;flex-wrap:wrap}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .blk{border:1.5px dashed #e0c79a;border-radius:12px;padding:10px;margin-top:12px;background:#fffdf8}
+  .blk>.top b{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .rowedit{display:grid;grid-template-columns:1fr 90px auto;gap:6px;margin-top:6px;align-items:center}
+  .itemedit{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:8px}
+  .itemedit .grid{margin-bottom:6px}
+  .add{margin-top:8px}
+  .foot{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;z-index:10}
+  #toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;max-width:90%;text-align:center;z-index:20}
+  #toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <form class="card" id="loginForm" autocomplete="off">
+    <h1>Admin Login</h1>
+    <p>Bath Street Market menu manager</p>
+    <label for="u">Username</label><input id="u" autocomplete="username" required>
+    <label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required>
+    <button class="primary full" type="submit">Log in</button>
+    <div id="err"></div>
+  </form>
+</div>
+
+<div id="app" class="hidden">
+  <header class="bar">
+    <h1>Menu Manager</h1>
+    <div class="tools"><a href="index.html" target="_blank">View site</a><button id="logout">Log out</button></div>
+  </header>
+  <main id="editor"></main>
+  <div class="foot">
+    <button class="ghost" id="addSec">+ Add category</button>
+    <button class="gold" id="publish">Publish to website</button>
+    <button class="ghost" id="download">Download menu.js</button>
+    <button class="danger" id="reset">Reset changes</button>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script src="menu.js"></script>
+<script>
+  // Client-side gate only: it hides the editor, it is not real security. Publishing is protected by the GitHub token.
+  const HASH='859b2dc4d7d3208067d1a2185db5457c2efb8a48e47886b0a78e17f45579032b';
+  const REPO={owner:'BathStreetMarkey',repo:'BathStreetMarket',path:'menu.js',branch:'main'};
+  const DRAFT='bsm_draft', TOKEN='bsm_gh_token', SESSION='bsm_admin';
+
+  const $=id=>document.getElementById(id);
+  const sha=async s=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const clone=o=>JSON.parse(JSON.stringify(o));
+  const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),3200)};
+
+  let menu=JSON.parse(localStorage.getItem(DRAFT)||'null')||clone(window.MENU);
+  const save=()=>localStorage.setItem(DRAFT,JSON.stringify(menu));
+
+  /* ---- login ---- */
+  const show=()=>{$('login').classList.add('hidden');$('app').classList.remove('hidden');render()};
+  $('loginForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(await sha('bsm|'+$('u').value.trim()+'|'+$('p').value)===HASH){sessionStorage.setItem(SESSION,'1');show()}
+    else $('err').textContent='Incorrect username or password.';
+  });
+  $('logout').onclick=()=>{sessionStorage.removeItem(SESSION);location.reload()};
+
+  /* ---- helpers ---- */
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const slug=t=>(t||'section').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'section';
+  const move=(arr,i,d)=>{const j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]]};
+  const tools=(p)=>`<div class="tools"><button class="mini" data-a="up" data-p="${p}">&uarr;</button><button class="mini" data-a="down" data-p="${p}">&darr;</button><button class="mini danger" data-a="del" data-p="${p}">Delete</button></div>`;
+  const inp=(label,path,val,extra='')=>`<div><label>${label}</label><input data-f="${path}" value="${esc(val)}" ${extra}></div>`;
+  const get=(path)=>path.split('.').reduce((o,k)=>o[k],menu);
+  const parent=(path)=>{const k=path.split('.');return{arr:get(k.slice(0,-1).join('.')),i:+k[k.length-1]}};
+
+  /* ---- render ---- */
+  function render(){
+    $('editor').innerHTML=menu.sections.map((s,si)=>{
+      const sp=`sections.${si}`;
+      return `<div class="sec">
+        <div class="top"><b>${esc(s.title||'New category')}</b>${tools(sp)}</div>
+        <div class="grid">${inp('Title',sp+'.title',s.title)}${inp('Tab name',sp+'.tab',s.tab)}</div>
+        <div class="grid">${inp('Badge (optional, e.g. Weekdays only)',sp+'.badge',s.badge)}${inp('Note (optional)',sp+'.note',s.note)}</div>
+        ${s.blocks.map((b,bi)=>blockHtml(b,`${sp}.blocks.${bi}`)).join('')}
+        <div class="add tools">
+          <button class="mini" data-a="addblk" data-p="${sp}" data-t="items">+ Menu items</button>
+          <button class="mini" data-a="addblk" data-p="${sp}" data-t="rows">+ Price list</button>
+          <button class="mini" data-a="addblk" data-p="${sp}" data-t="chips">+ Options list</button>
+          <button class="mini" data-a="addblk" data-p="${sp}" data-t="text">+ Text note</button>
+        </div></div>`;
+    }).join('')||'<p style="text-align:center;color:var(--muted)">No categories yet. Tap "Add category".</p>';
+  }
+  function blockHtml(b,p){
+    const names={items:'Menu items',rows:'Price list',chips:'Options list',text:'Text note'};
+    let body='';
+    if(b.type==='items'){
+      body=inp('Sub-heading (optional, e.g. On Hoagie Roll)',p+'.title',b.title)+b.items.map((it,ii)=>{
+        const ip=`${p}.items.${ii}`;
+        return `<div class="itemedit"><div class="grid">${inp('Name',ip+'.name',it.name)}${inp('Price',ip+'.price',it.price)}</div>
+          <div class="grid">${inp('Description / toppings',ip+'.desc',it.desc)}${inp('Tag (e.g. Chef\'s Special)',ip+'.tag',it.tag)}</div>${tools(ip)}</div>`;
+      }).join('')+`<button class="mini add" data-a="additem" data-p="${p}">+ Add item</button>`;
+    }else if(b.type==='rows'){
+      body=inp('Title',p+'.title',b.title)+b.rows.map((r,ri)=>{
+        const rp=`${p}.rows.${ri}`;
+        return `<div class="rowedit"><input data-f="${rp}.label" value="${esc(r.label)}" placeholder="Label"><input data-f="${rp}.price" value="${esc(r.price)}" placeholder="Price">
+          <div class="tools"><button class="mini" data-a="up" data-p="${rp}">&uarr;</button><button class="mini" data-a="down" data-p="${rp}">&darr;</button><button class="mini danger" data-a="del" data-p="${rp}">&times;</button></div></div>`;
+      }).join('')+`<button class="mini add" data-a="addrow" data-p="${p}">+ Add row</button>`;
+    }else if(b.type==='chips'){
+      body=inp('Title',p+'.title',b.title)+`<label>Options (separate with commas)</label><input data-f="${p}.chips" data-list="1" value="${esc((b.chips||[]).join(', '))}">`;
+    }else{
+      body=inp('Title',p+'.title',b.title)+`<label>Text</label><textarea rows="3" data-f="${p}.text">${esc(b.text)}</textarea>`;
+    }
+    return `<div class="blk"><div class="top"><b>${names[b.type]}</b>${tools(p)}</div>${body}</div>`;
+  }
+
+  /* ---- events ---- */
+  $('editor').addEventListener('input',e=>{
+    const f=e.target.dataset.f;if(!f)return;
+    const k=f.split('.'),last=k.pop(),o=get(k.join('.'));
+    o[last]=e.target.dataset.list?e.target.value.split(',').map(x=>x.trim()).filter(Boolean):e.target.value;
+    save();
+  });
+  $('editor').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-a]');if(!b)return;
+    const {a,p,t}=b.dataset;
+    if(a==='additem') get(p).items.push({name:'',desc:'',price:'',tag:''});
+    else if(a==='addrow') get(p).rows.push({label:'',price:''});
+    else if(a==='addblk'){
+      const nb={items:{type:'items',title:'',items:[{name:'',desc:'',price:'',tag:''}]},rows:{type:'rows',title:'',rows:[{label:'',price:''}]},chips:{type:'chips',title:'',chips:[]},text:{type:'text',title:'',text:''}}[t];
+      get(p).blocks.push(nb);
+    }else{
+      const {arr,i}=parent(p);
+      if(a==='up')move(arr,i,-1);else if(a==='down')move(arr,i,1);
+      else if(a==='del'&&confirm('Delete this?'))arr.splice(i,1);else if(a==='del')return;
+    }
+    save();render();
+  });
+  $('addSec').onclick=()=>{menu.sections.push({id:'',tab:'New',title:'New category',badge:'',note:'',blocks:[]});save();render();scrollTo({top:document.body.scrollHeight,behavior:'smooth'})};
+  $('reset').onclick=()=>{if(confirm('Discard unpublished changes and reload the live menu?')){localStorage.removeItem(DRAFT);menu=clone(window.MENU);render();toast('Changes discarded')}};
+
+  /* ---- output ---- */
+  function finalize(){
+    const out=clone(menu),used=new Set();
+    out.sections.forEach(s=>{let id=slug(s.title||s.tab),n=id,c=2;while(used.has(n))n=id+'-'+c++;used.add(n);s.id=n;s.tab=s.tab||s.title});
+    return 'window.MENU = '+JSON.stringify(out,null,2)+';\n';
+  }
+  $('download').onclick=()=>{
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([finalize()],{type:'text/javascript'}));a.download='menu.js';a.click();
+  };
+  const b64=s=>{let r='';new TextEncoder().encode(s).forEach(b=>r+=String.fromCharCode(b));return btoa(r)};
+  $('publish').onclick=async()=>{
+    let token=localStorage.getItem(TOKEN);
+    if(!token){
+      token=(prompt('Paste your GitHub access token (needs Contents: read & write on this repo). It is stored only in this browser.')||'').trim();
+      if(!token)return;
+    }
+    const url=`https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/${REPO.path}`;
+    const H={Authorization:'Bearer '+token,Accept:'application/vnd.github+json'};
+    toast('Publishing...');
+    try{
+      const cur=await fetch(`${url}?ref=${REPO.branch}`,{headers:H});
+      if(cur.status===401||cur.status===403||cur.status===404){localStorage.removeItem(TOKEN);throw new Error('Token rejected or no access to the repo.')}
+      const sha=cur.ok?(await cur.json()).sha:undefined;
+      const res=await fetch(url,{method:'PUT',headers:H,body:JSON.stringify({message:'Update menu from admin page',content:b64(finalize()),branch:REPO.branch,sha})});
+      if(!res.ok)throw new Error('GitHub error '+res.status);
+      localStorage.setItem(TOKEN,token);
+      toast('Published! The live site updates in about 1-2 minutes.');
+    }catch(err){toast(err.message)}
+  };
+  if(sessionStorage.getItem(SESSION)==='1') show();
+</script>
+</body>
+</html>
