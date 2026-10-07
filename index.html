@@ -137,7 +137,8 @@
     if(b.type==='chips') return `<div class="box">${head}<div class="chips">${(b.chips||[]).map(c=>`<span>${esc(c)}</span>`).join('')}</div></div>`;
     return `<div class="box">${head}<p class="note" style="margin:0">${esc(b.text)}</p></div>`;
   };
-  const sections=(window.MENU&&window.MENU.sections)||[];
+  const draft=location.search.includes('preview')&&localStorage.getItem('bsm_draft');
+  const sections=(draft?JSON.parse(draft):window.MENU||{}).sections||[];
   document.getElementById('tabs').innerHTML=sections.map((s,i)=>`<a href="#${esc(s.id)}"${i?'':' class="active"'}>${esc(s.tab||s.title)}</a>`).join('');
   document.getElementById('menu').innerHTML=sections.map(s=>
     `<section id="${esc(s.id)}"><h2>${esc(s.title)}${s.badge?` <small>${esc(s.badge)}</small>`:''}</h2>${s.note?`<p class="note">${esc(s.note)}</p>`:''}${(s.blocks||[]).map(blockHtml).join('')}</section>`).join('');
