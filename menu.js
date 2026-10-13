@@ -273,12 +273,12 @@ window.MENU = {
           "title": "Add-ons",
           "rows": [
             {
-              "label": "Bacon",
-              "price": "$2.00"
-            },
-            {
               "label": "Mushroom",
               "price": "$1.00"
+            },
+            {
+              "label": "Bacon",
+              "price": "$2.00"
             },
             {
               "label": "Egg",
@@ -299,6 +299,72 @@ window.MENU = {
             {
               "label": "Extra regular topping (each)",
               "price": "$0.50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "veggie-indian-style-sandwich",
+      "tab": "Veggie & Indian style sandwich ",
+      "title": "Veggie & Indian style sandwich",
+      "badge": "",
+      "note": "",
+      "blocks": [
+        {
+          "type": "items",
+          "title": "On  Hoagie roll and/or white bread",
+          "items": [
+            {
+              "name": "Kheemo sandwich",
+              "desc": "Served with eggs, onions, jalapeno with Indian spices",
+              "price": "$8.99",
+              "tag": "Chef’s Special",
+              "img": ""
+            },
+            {
+              "name": "Spicy omelette ",
+              "desc": "Served with onions and eggs",
+              "price": "$8.99",
+              "tag": "",
+              "img": ""
+            },
+            {
+              "name": "Veggie hoagie",
+              "desc": "Onions, tomatoes, lettuce, pickles",
+              "price": "$8.99",
+              "tag": "",
+              "img": ""
+            }
+          ]
+        },
+        {
+          "type": "rows",
+          "title": "Add-ons",
+          "rows": [
+            {
+              "label": "Egg",
+              "price": "1$"
+            },
+            {
+              "label": "Jalapeno",
+              "price": "0.50$"
+            },
+            {
+              "label": "Capsicum ",
+              "price": "0.50$"
+            },
+            {
+              "label": "Pickle",
+              "price": "0.50$"
+            },
+            {
+              "label": "Sweet paper",
+              "price": "0.50$"
+            },
+            {
+              "label": "Hot paper",
+              "price": "0.50$"
             }
           ]
         }
