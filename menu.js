@@ -90,13 +90,15 @@ window.MENU = {
               "name": "Chicken Tenders",
               "desc": "2 pieces",
               "price": "$3.00",
-              "tag": ""
+              "tag": "",
+              "img": "images/chicken-tenders-mv8mckuo0.jpg"
             },
             {
               "name": "Chicken Legs",
               "desc": "2 pieces",
               "price": "$3.00",
-              "tag": ""
+              "tag": "",
+              "img": "images/chicken-legs-mv8mcm4g1.jpg"
             }
           ]
         },
@@ -158,7 +160,8 @@ window.MENU = {
               "name": "Italian",
               "desc": "Provolone cheese, Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
               "price": "$8.99",
-              "tag": "Chef's Special"
+              "tag": "Chef's Special",
+              "img": "images/italian-mv8mcn862.jpg"
             },
             {
               "name": "Veggie Sandwich",
