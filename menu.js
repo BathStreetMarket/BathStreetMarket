@@ -162,12 +162,6 @@ window.MENU = {
               "price": "$8.99",
               "tag": "Chef's Special",
               "img": "images/italian-mv8mcn862.jpg"
-            },
-            {
-              "name": "Veggie Sandwich",
-              "desc": "Mayo, lettuce, tomatoes, onions, salt, pepper & oregano, oil and vinegar.",
-              "price": "$7.99",
-              "tag": ""
             }
           ]
         },
@@ -261,7 +255,7 @@ window.MENU = {
               "desc": "Mayo, ketchup, lettuce, fried or regular onions, tomatoes",
               "price": "$5.50",
               "tag": "Chef's Special",
-              "img": ""
+              "img": "images/cheeseburger-mv9nhubv0.jpg"
             },
             {
               "name": "Chicken Sandwich",
