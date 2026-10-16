@@ -84,7 +84,8 @@ window.MENU = {
               "name": "Chicken Wings",
               "desc": "2 pieces",
               "price": "$2.40",
-              "tag": ""
+              "tag": "",
+              "img": "images/chicken-wings-mvayos8p0.jpg"
             },
             {
               "name": "Chicken Tenders",
