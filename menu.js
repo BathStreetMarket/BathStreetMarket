@@ -50,10 +50,6 @@ window.MENU = {
           "title": "Add-ons",
           "rows": [
             {
-              "label": "Mayo",
-              "price": "$0.50"
-            },
-            {
               "label": "Extra cheese",
               "price": "$0.50"
             },
